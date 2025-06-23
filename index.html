@@ -5,11 +5,11 @@
     <link rel="shortcut icon" href="">
     <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
     <meta charset="UTF-8"/>
-    <title>Jogo de Números</title>
+    <title>SUPER MANIA</title>
     <style>
         body {
         
-    overflow: hidden;
+    
 
             font-family: Arial, sans-serif;
             margin: 0;
@@ -22,13 +22,14 @@
         }
 
         .container {
-            width: 180%;
+            width: 170%;
             max-width: 700px;
-            margin-top:30%;
+            margin-top:3%;
             background-color: white;
             padding: 15px;
             border-radius: 12px;
             box-shadow: 0 0 10px rgba(0,0,0,0.1);
+          
         }
 
         .input-valor {
@@ -76,24 +77,10 @@
             background-color: #0056b3;
         }
 
-      .checkbox-container {
-    display: grid;
-    grid-template-columns: repeat(10, 1fr);
-    gap: 4px;
-    justify-items: center;
-    justify-content: center;
-}
+   
 
 
-.number-button:hover {
-    background-color: #e6f0ff;
-}
-
-.number-button.selecionado {
-    background-color: #007BFF;
-    color: white;
-}
-
+          
         .resultado {
             margin-top: 10px;
             font-weight: bold;
@@ -121,24 +108,20 @@
             background-color: #1ebe5d;
         }
 
-        @media (max-width: 500px) {
-            .checkbox-container {
-                grid-template-columns: repeat(5, 1fr);
-            }
-
+   
             .number-button {
                 width: 40px;
                 height: 40px;
                 font-size: 14px;
             }
-        }
         
-        checkbox-container {
-  .checkbox-container {
+        
+      .checkbox-container {
     display: grid;
     grid-template-columns: repeat(10, 1fr);
     gap: 4px;
-}
+    justify-items: center;
+    justify-content: center;
 }
 
 .number-button {
@@ -147,19 +130,20 @@
   height: 50px;
   border: 2px solid #007BFF;
   border-radius: 8px;
-  background-color: white;
-  color: #007BFF;
+  background-color: black;
+  color: white;
+  font-weight:bold;
   font-size: 20px;
   cursor: pointer;
   transition: all 0.3s;
 }
 
 .number-button:hover {
-  background-color: #e6f0ff;
+  background-color: 000000;
 }
 
 .number-button.selecionado {
-  background-color: #007BFF;
+  background-color: green;
   color: white;
 }
   /* 📊 Contador e Resultado */
@@ -172,24 +156,13 @@
   }
 
   /* 📲 Botão WhatsApp */
-  .btn-whatsapp {
-    background-color: #25D366;
-    color: white;
-    padding: 10px 20px;
-    border: none;
-    border-radius: 8px;
-    cursor: pointer;
-    font-size: 16px;
-    display: block;
-    margin: 15px auto 0;
-  }
 
   .btn-whatsapp:hover {
     background-color: #1ebe5d;
   }
 
   /* 🌐 Responsivo */
-  @media (max-width: 700px) {
+  @media (max-width: 500px) {
     .checkbox-container {
    grid-template-columns: repeat(10, 60px);
     }
