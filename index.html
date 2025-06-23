@@ -45,13 +45,7 @@
             border-radius: 8px;
         }
 
-        .button-container {
-            display: flex;
-            flex-wrap: wrap;
-            justify-content: center;
-            gap: 5px;
-            margin-bottom: 10px;
-        }
+      
 
         .button-container button {
             display: flex;
@@ -342,6 +336,7 @@ for (let i = 0; i <= 99; i++) {
 
     container.appendChild(btn);
 }
+const resultad ="www.oresultado.com.br";
 
 // 🔄 Atualiza contador e valor
 function atualizarContador() {
@@ -460,13 +455,14 @@ function enviarWhatsapp() {
     const dataHora = agora.toLocaleString('pt-BR');
     const numeroControle = gerarNumeroControle();
 
-    const mensagem = `*.*                          📝 *Aposta*
-🔢 *Números:*\n *${selecionados.join(' - ')}*
-💰 *Valor Apostado:* R$ ${valorDigitado.toFixed(2).replace('.', ',')}
-🎯 *Tipo:* ${tipoSelecionado}
+    const mensagem = `*.*           📝 *Aposta Super Mania*
+🔢 *Extacao 20:00 :*\n *${selecionados.join(' - ')}*\n
+💰 *Valor A PAGAR:* R$ ${valorDigitado.toFixed(2).replace('.', ',')}
+🎯 *Quantidade:* ${tipoSelecionado}
 💵 *Total a Receber:* ${total}
 📅 *Data:* ${dataHora}
-🔢 *Controle:* ${numeroControle}`;
+🔢 *Controle:* ${numeroControle}
+RESULTADO: ${resultad}`;
 
     abrirModal();
 
