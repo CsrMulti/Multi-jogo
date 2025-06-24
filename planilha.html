@@ -1,0 +1,248 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Meta Financeira</title>
+  <style>
+    body {
+      background: linear-gradient(to right, #0f2027, #203a43, #2c5364);
+      font-family: Arial, sans-serif;
+      color: white;
+      padding: 0px;
+    }
+
+    h1 {
+      text-align: center;
+    }
+
+    .controls {
+      width: 100%;
+      max-width: 400px;
+      margin: 0 auto 20px auto;
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+      align-items: stretch;
+    }
+
+    label {
+      font-weight: bold;
+      text-align: center;
+    }
+
+    input {
+      padding: 10px;
+      border-radius: 5px;
+      border: none;
+      width: 100%;
+      box-sizing: border-box;
+    }
+
+    button {
+      padding: 10px;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+    }
+
+    .generate-btn {
+      background-color: #28a745;
+      color: white;
+    }
+
+    .generate-btn:hover {
+      background-color: #218838;
+    }
+
+    .clear-btn {
+      background-color: red;
+      color: white;
+    }
+
+    .clear-btn:hover {
+      background-color: darkred;
+    }
+
+    .valor-restante {
+      text-align: center;
+      font-size: 18px;
+      margin-bottom: 20px;
+      font-weight: bold;
+      white-space: pre-line;
+    }
+
+    table {
+      width: 90%;
+      margin: 0 auto;
+      border-collapse: collapse;
+      background-color: #fff;
+      color: #000;
+      border-radius: 10px;
+      overflow: hidden;
+    }
+
+    th, td {
+      border: 1px solid #ddd;
+      padding: 6px;
+      text-align: center;
+    }
+
+    th {
+      background-color: #203a43;
+      color: white;
+    }
+
+    .pago {
+      background-color: #28a745;
+      color: white;
+    }
+  </style>
+</head>
+<body>
+
+  <h1>Controle da Meta Financeira</h1>
+
+  <div class="controls">
+    <label>Meta (R$):</label>
+    <input type="number" id="meta" min="1" value="100000">
+
+    <label>Anos:</label>
+    <input type="number" id="anos" min="1" value="2">
+
+    <button class="generate-btn" onclick="gerarTabela()">Gerar Tabela</button>
+
+    <label>Retirada (R$):</label>
+    <input type="number" id="retirada" min="0" placeholder="Ex: 500">
+    <button class="generate-btn" onclick="fazerRetirada()">Registrar Retirada</button>
+
+    <button class="clear-btn" onclick="limparTudo()">X Limpar Tudo</button>
+  </div>
+
+  <div class="valor-restante" id="valorRestante"></div>
+  <div id="tabela"></div>
+
+  <script>
+    const diasPorSemana = 6;
+    const semanasPorAno = 52;
+
+    function gerarTabela() {
+      const anos = parseInt(document.getElementById('anos').value);
+      const meta = parseFloat(document.getElementById('meta').value);
+
+      if (isNaN(anos) || anos < 1 || isNaN(meta) || meta < 1) {
+        alert('Preencha os campos corretamente.');
+        return;
+      }
+
+      const totalDias = diasPorSemana * semanasPorAno * anos;
+      const valorPorDia = (meta / totalDias).toFixed(2);
+
+      let dados = [];
+      let acumulado = 0;
+
+      for (let i = 1; i <= totalDias; i++) {
+        acumulado += parseFloat(valorPorDia);
+        dados.push({
+          dia: i,
+          valorDia: valorPorDia,
+          acumulado: acumulado.toFixed(2),
+          pago: false
+        });
+      }
+
+      const obj = {
+        meta,
+        anos,
+        dados,
+        retirado: 0
+      };
+
+      localStorage.setItem("tabelaMeta", JSON.stringify(obj));
+      desenharTabela(obj);
+    }
+
+    function desenharTabela(obj) {
+      const { meta, dados, retirado = 0 } = obj;
+      const totalPago = dados
+        .filter(item => item.pago)
+        .reduce((soma, item) => soma + parseFloat(item.valorDia), 0);
+
+      const restante = (meta - totalPago - retirado).toFixed(2);
+      document.getElementById('valorRestante').innerText =
+        `💰 Faltam R$${restante} para atingir a meta de R$${meta}\n🔻 Total retirado: R$${retirado.toFixed(2)}\n✅ Total pago: R$${totalPago.toFixed(2)}`;
+
+      let html = `
+        <table>
+          <tr>
+            <th>Dia</th>
+            <th>Valor (R$)</th>
+            <th>Acumulado</th>
+            <th>Status</th>
+            <th>Ação</th>
+          </tr>
+      `;
+
+      dados.forEach(item => {
+        html += `
+          <tr class="${item.pago ? 'pago' : ''}">
+            <td>${item.dia}</td>
+            <td>${item.valorDia}</td>
+            <td>${item.acumulado}</td>
+            <td>${item.pago ? 'Pago' : 'Pendente'}</td>
+            <td><button onclick="togglePago(${item.dia})">${item.pago ? 'Desfazer' : 'Pagar'}</button></td>
+          </tr>
+        `;
+      });
+
+      html += "</table>";
+      document.getElementById("tabela").innerHTML = html;
+    }
+
+    function togglePago(dia) {
+      const obj = JSON.parse(localStorage.getItem("tabelaMeta"));
+      const item = obj.dados.find(x => x.dia === dia);
+      item.pago = !item.pago;
+      localStorage.setItem("tabelaMeta", JSON.stringify(obj));
+      desenharTabela(obj);
+    }
+
+    function fazerRetirada() {
+      const valorRetirada = parseFloat(document.getElementById("retirada").value);
+
+      if (isNaN(valorRetirada) || valorRetirada <= 0) {
+        alert("Digite um valor válido para retirada.");
+        return;
+      }
+
+      let obj = JSON.parse(localStorage.getItem("tabelaMeta"));
+      if (!obj) {
+        alert("Você precisa gerar a tabela primeiro.");
+        return;
+      }
+
+      obj.retirado = (obj.retirado || 0) + valorRetirada;
+      localStorage.setItem("tabelaMeta", JSON.stringify(obj));
+      desenharTabela(obj);
+      document.getElementById("retirada").value = "";
+    }
+
+    function limparTudo() {
+      localStorage.removeItem("tabelaMeta");
+      document.getElementById("tabela").innerHTML = "";
+      document.getElementById("valorRestante").innerText = "";
+    }
+
+    // Carrega automaticamente se existir dados salvos
+    window.onload = () => {
+      const obj = JSON.parse(localStorage.getItem("tabelaMeta"));
+      if (obj) {
+        document.getElementById("meta").value = obj.meta;
+        document.getElementById("anos").value = obj.anos;
+        desenharTabela(obj);
+      }
+    };
+  </script>
+
+</body>
+</html>
