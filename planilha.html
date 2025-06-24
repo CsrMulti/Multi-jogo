@@ -97,11 +97,20 @@
       background-color: #28a745;
       color: white;
     }
+
+    .btn-group {
+      text-align: center;
+      margin: 15px;
+    }
+
+    #verMaisBtn, #ocultarBtn {
+      margin: 5px;
+    }
   </style>
 </head>
 <body>
 
-  <h1>Controle da Meta Financeira</h1>
+  <h1>META MILIONARIA</h1>
 
   <div class="controls">
     <label>Meta (R$):</label>
@@ -122,9 +131,16 @@
   <div class="valor-restante" id="valorRestante"></div>
   <div id="tabela"></div>
 
+  <div class="btn-group">
+    <button class="generate-btn" id="verMaisBtn" onclick="verMais()">+ Ver mais 50</button>
+    <button class="clear-btn" id="ocultarBtn" onclick="ocultar()">– Ocultar</button>
+    <div style="margin-top:10px; font-weight:bold;" id="contadorPagos"></div>
+  </div>
+
   <script>
     const diasPorSemana = 6;
     const semanasPorAno = 52;
+    let limiteExibicao = 50;
 
     function gerarTabela() {
       const anos = parseInt(document.getElementById('anos').value);
@@ -159,18 +175,20 @@
       };
 
       localStorage.setItem("tabelaMeta", JSON.stringify(obj));
+      limiteExibicao = 50;
       desenharTabela(obj);
     }
 
     function desenharTabela(obj) {
       const { meta, dados, retirado = 0 } = obj;
-      const totalPago = dados
-        .filter(item => item.pago)
-        .reduce((soma, item) => soma + parseFloat(item.valorDia), 0);
-
+      const totalPago = dados.filter(item => item.pago).reduce((soma, item) => soma + parseFloat(item.valorDia), 0);
       const restante = (meta - totalPago - retirado).toFixed(2);
+      const totalMarcado = dados.filter(item => item.pago).length;
+      const totalDias = dados.length;
+
       document.getElementById('valorRestante').innerText =
-        `💰 Faltam R$${restante} para atingir a meta de R$${meta}\n🔻 Total retirado: R$${retirado.toFixed(2)}\n✅ Total pago: R$${totalPago.toFixed(2)}`;
+        `💰 Faltam R$${restante} para atingir a meta de R$${meta}\n🔻 Retirado: R$${retirado.toFixed(2)}\n✅ Pagos: ${totalMarcado}/${totalDias}`;
+      document.getElementById('contadorPagos').innerText = `✅ Dias pagos: ${totalMarcado} de ${totalDias}`;
 
       let html = `
         <table>
@@ -183,9 +201,10 @@
           </tr>
       `;
 
-      dados.forEach(item => {
+      dados.forEach((item, i) => {
+        const visivel = i < limiteExibicao;
         html += `
-          <tr class="${item.pago ? 'pago' : ''}">
+          <tr class="${item.pago ? 'pago' : ''}" style="display:${visivel ? 'table-row' : 'none'}" id="linha-${i}">
             <td>${item.dia}</td>
             <td>${item.valorDia}</td>
             <td>${item.acumulado}</td>
@@ -197,6 +216,10 @@
 
       html += "</table>";
       document.getElementById("tabela").innerHTML = html;
+
+      // Oculta botões se todos os dias estiverem marcados ou exibidos
+      document.getElementById("verMaisBtn").style.display = limiteExibicao < totalDias ? "inline-block" : "none";
+      document.getElementById("ocultarBtn").style.display = limiteExibicao > 50 ? "inline-block" : "none";
     }
 
     function togglePago(dia) {
@@ -227,10 +250,23 @@
       document.getElementById("retirada").value = "";
     }
 
+    function verMais() {
+      const obj = JSON.parse(localStorage.getItem("tabelaMeta"));
+      limiteExibicao += 50;
+      desenharTabela(obj);
+    }
+
+    function ocultar() {
+      limiteExibicao = 50;
+      const obj = JSON.parse(localStorage.getItem("tabelaMeta"));
+      desenharTabela(obj);
+    }
+
     function limparTudo() {
       localStorage.removeItem("tabelaMeta");
       document.getElementById("tabela").innerHTML = "";
       document.getElementById("valorRestante").innerText = "";
+      document.getElementById("contadorPagos").innerText = "";
     }
 
     // Carrega automaticamente se existir dados salvos
