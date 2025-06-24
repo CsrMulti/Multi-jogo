@@ -8,169 +8,59 @@
     <title>SUPER MANIA </title>
     <style>
         body {
-        
-    
-
-            font-family: Arial, sans-serif;
-            margin: 0;
-            background-color: #000000;
-        }
-
-        h2 {
-            text-align: center;
-            color: #333;
-        }
-
-        .container {
-            width: 170%;
-            max-width: 700px;
-            margin-top:3%;
-            background-color: white;
-            padding: 15px;
-            border-radius: 12px;
-            box-shadow: 0 0 10px rgba(0,0,0,0.1);
-          
-        }
-
-        .input-valor {
-            margin-bottom: 15px;
-            text-align: center;
-        }
-
-        .input-valor input {
-            padding: 8px;
-            font-size: 16px;
-            width: 120px;
-            text-align: center;
-            border: 2px solid #007BFF;
-            border-radius: 8px;
-        }
-
-      
-
-        .button-container button {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            padding: 8px;
-            font-size: 14px;
-            cursor: pointer;
-            border-radius: 8px;
-            border: none;
-            background-color: #007BFF;
-            color: white;
-            transition: background-color 0.3s;
-            
-        }
-
-        .button-container button span.tipo {
-            font-size: 18px;
-            font-weight: bold;
-        }
-
-        .button-container button span.valor {
-            font-size: 13px;
-        }
-
-        .button-container button:hover {
-            background-color: #0056b3;
-        }
-
-        .btn-whatsapp {
-            background-color: #25D366;
-            color: white;
-            padding: 10px 20px;
-            border: none;
-            border-radius: 8px;
-            cursor: pointer;
-            font-size: 16px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 8px;
-            margin: 15px auto 0;
-        }
-
-        .btn-whatsapp:hover {
-            background-color: #1ebe5d;
-        }
-
-   
-            .number-button {
-                width: 40px;
-                height: 40px;
-                font-size: 14px;
-            }
-        
-        
-      .checkbox-container {
-    display: grid;
-    grid-template-columns: repeat(10, 1fr);
-    gap: 4px;
-    justify-items: center;
-    justify-content: center;
+    font-family: Arial, sans-serif;
+    margin: 0;
+    background-color: #000;
 }
 
-.number-button {
-
-  width: 60px;
-  height: 50px;
-  border: 2px solid #007BFF;
-  border-radius: 8px;
-  background-color: black;
-  color: white;
-  font-weight:bold;
-  font-size: 20px;
-  cursor: pointer;
-  transition: all 0.3s;
-}
-
-.number-button:hover {
-  background-color: 000000;
-}
-
-.number-button.selecionado {
-  background-color: green;
-  color: white;
-}
-  /* 📊 Contador e Resultado */
-  .resultado {
-    margin-top: 10px;
-    font-weight: bold;
-    font-size: 32px;
-    color: green;
+h2 {
     text-align: center;
-    transition: background-color 0.3s;
-  }
+    margin:0;
+    color: white;
+}
 
-  /* 📲 Botão WhatsApp */
+.container {
+    width: 100%;
+    max-width: 700px;
+    
+    background-color: white;
+    padding: 10px;
+    border-radius: 12px;
+    box-shadow: 0 0 10px rgba(0,0,0,0.3);
+}
 
-  .btn-whatsapp:hover {
-    background-color: #1ebe5d;
-  }
+.input-valor {
+    margin-bottom: 5px;
+    text-align: center;
+}
 
-  /* 🌐 Responsivo */
-  @media (max-width: 500px) {
-    .checkbox-container {
-   grid-template-columns: repeat(10, 60px);
-    }
-  }
-  
-  .button-container {
+.input-valor input {
+    padding: 8px;
+    font-size: 16px;
+    width: 40%;
+    max-width: 100px;
+    text-align: center;
+    background-color:black;
+    color:white;
+    border: 2px solid #007BFF;
+    border-radius: 8px;
+}
+
+.button-container {
     display: flex;
     flex-wrap: wrap;
     justify-content: center;
-    gap: 10px;
-    margin-bottom: 20px;
-  }
+    gap: 5px;
+    margin-bottom: 0px;
+    
+}
 
-  .button-container button {
+.button-container button {
     display: flex;
     flex-direction: column;
     align-items: center;
     justify-content: center;
-    padding: 8px;
+    margin:0px;
     font-size: 14px;
     cursor: pointer;
     border-radius: 8px;
@@ -180,63 +70,136 @@
     transition: background-color 0.3s;
     min-width: 70px;
     min-height: 60px;
-  }
+}
 
-  .button-container button span.tipo {
+.button-container button span.tipo {
     font-size: 18px;
     font-weight: bold;
-  }
+}
 
-  .button-container button span.valor {
+.button-container button span.valor {
     font-size: 13px;
-  }
+}
 
-  .button-container button:hover {
+.button-container button:hover {
     background-color: #0056b3;
-  }
-/* 🔥 Modal */
+}
+
+.btn-whatsapp {
+    background-color: #ffdd00;
+    color:black;
+    font-weight:bold;
+    padding: 10px 20px;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    font-size: 16px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    margin: 15px auto 0;
+}
+
+.btn-whatsapp:hover {
+    background-color: #1ebe5d;
+}
+
+.checkbox-container {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+}
+
+.linha-numeros {
+    display: grid;
+    grid-template-columns: repeat(10, 1fr);
+    gap: 1px;
+}
+
+.number-button {
+    width: 100%;
+    aspect-ratio: 1/1;
+    border: 2px solid #007BFF;
+    border-radius: 8px;
+    background-color: black;
+    color: white;
+    font-weight: bold;
+    font-size: clamp(14px, 3vw, 18px);
+    cursor: pointer;
+    transition: all 0.3s;
+}
+
+.number-button:hover {
+    background-color: #333;
+}
+
+.number-button.selecionado {
+    background-color: green;
+    color: white;
+}
+
+/* Responsivo pequeno */
+
+
+.resultado {
+    margin-top: 10px;
+    font-weight: bold;
+    font-size: 20px;
+    color: green;
+    text-align: center;
+}
+
 .modal {
-  display: none; 
-  position: fixed;
-  z-index: 999;
-  left: 0;
-  top: 0;
-  width: 100%;
-  height: 100%;
-  overflow: hidden;
-  background-color: rgba(0,0,0,0.7);
+    display: none;
+    position: fixed;
+    z-index: 999;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    overflow: hidden;
+    background-color: rgba(0,0,0,0.7);
 }
 
 .modal-content {
-  background-color: white;
-  margin: 15% auto;
-  padding: 20px;
-  border-radius: 10px;
-  width: 80%;
-  max-width: 300px;
-  text-align: center;
+    background-color: white;
+    margin: 20% auto;
+    padding: 20px;
+    border-radius: 10px;
+    width: 80%;
+    max-width: 300px;
+    text-align: center;
 }
 
 .close {
-  color: #aaa;
-  font-size: 28px;
-  font-weight: bold;
-  cursor: pointer;
+    color: #aaa;
+    font-size: 28px;
+    font-weight: bold;
+    cursor: pointer;
 }
-.btn{
-    display: inline;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            padding: 8px;
-            font-size: 14px;
-            cursor: pointer;
-            border-radius: 8px;
-            border: none;
-            background-color: green;
-            color: white;
-            transition: background-color 0.3s;
-            
+
+.btn {
+    padding: 8px 16px;
+    font-size: 14px;
+    cursor: pointer;
+    border-radius: 8px;
+    border: none;
+    background-color: green;
+    color: white;
+    transition: background-color 0.3s;
+}
+
+.btn:hover {
+    background-color: darkgreen;
+}
+
+/* 🌐 Responsivo Extra */
+@media (max-width: 1000px) {
+    .button-container button {
+        min-width: 60px;
+        min-height: 55px;
+    }
 }
     </style>
 </head>
@@ -304,31 +267,39 @@ gruposValidos.forEach(tipo => {
 });
 
 // 🔢 Cria botões numéricos
+// 🔢 Cria botões numéricos organizados em linhas de 10
 const container = document.getElementById('checkboxContainer');
-for (let i = 0; i <= 99; i++) {
-    const numero = i.toString().padStart(2, '0');
-    const btn = document.createElement('button');
-    btn.className = 'number-button';
-    btn.id = 'num' + numero;
-    btn.textContent = numero;
 
-    btn.addEventListener('click', () => {
-        const selecionados = document.querySelectorAll('.number-button.selecionado');
-        if (btn.classList.contains('selecionado')) {
-            btn.classList.remove('selecionado');
-        } else {
-            if (selecionados.length >= 85) {
-                alert("⚠️ Você só pode marcar no máximo 85 números.");
-                return;
+for (let i = 0; i <= 90; i += 10) {
+    const linha = document.createElement('div');
+    linha.className = 'linha-numeros';
+
+    for (let j = i; j < i + 10; j++) {
+        const numero = j.toString().padStart(2, '0');
+        const btn = document.createElement('button');
+        btn.className = 'number-button';
+        btn.id = 'num' + numero;
+        btn.textContent = numero;
+
+        btn.addEventListener('click', () => {
+            const selecionados = document.querySelectorAll('.number-button.selecionado');
+            if (btn.classList.contains('selecionado')) {
+                btn.classList.remove('selecionado');
+            } else {
+                if (selecionados.length >= 85) {
+                    alert("⚠️ Você só pode marcar no máximo 85 números.");
+                    return;
+                }
+                btn.classList.add('selecionado');
             }
-            btn.classList.add('selecionado');
-        }
-        atualizarContador();
-    });
+            atualizarContador();
+        });
 
-    container.appendChild(btn);
+        linha.appendChild(btn);
+    }
+
+    container.appendChild(linha);
 }
-
 // 🔄 Atualiza contador e valor
 function atualizarContador() {
     const selecionados = document.querySelectorAll('.number-button.selecionado');
@@ -463,9 +434,18 @@ RESULTADO: ${resultad}`;
         fecharModal();
     }, 2000);
 }
-function lotinha() { window.location.href = "https://supermania.netlify.app/lotinha"; }
-function seninha() { window.location.href = "https://supermania.netlify.app/seninha"; }
-function quininha() { window.location.href = "https://supermania.netlify.app/quininha"; }
+function lotinha() {
+                window.location.href = "https://supermania.netlify.app/lotinha";
+        }
+
+        function seninha() {
+                window.location.href = "https://supermania.netlify.app/seninha"
+        }
+
+        function quininha() {
+                window.location.href = "https://supermania.netlify.app/quininha";
+        }
+
 </script>
 
 </body>
