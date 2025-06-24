@@ -6,170 +6,199 @@
   <title>QUININHA</title>
   <style>
     body {
-      font-family: Arial, sans-serif;
-      background-color: #000;
-      margin: 0;
-    }
+    font-family: Arial, sans-serif;
+    margin: 0;
+    background-color: #000;
+}
 
-    h2 {
-      text-align: center;
-      color: white;
-    }
+h2 {
+    text-align: center;
+    margin:0;
+    color: white;
+}
 
-    .container {
-      width: 190%;
-      max-width: 700px;
-      margin: 3% auto;
-      background-color: #5b3fff;
-      padding: 15px;
-      border-radius: 12px;
-      box-shadow: 0 0 10px rgba(0,0,0,0.5);
-    }
+.container {
+    width: 100%;
+    max-width: 700px;
+    
+    background-color: white;
+    padding: 10px;
+    border-radius: 12px;
+    box-shadow: 0 0 10px rgba(0,0,0,0.3);
+}
 
-    .input-valor {
-      text-align: center;
-      margin-bottom: 15px;
-    }
+.input-valor {
+    margin-bottom: 5px;
+    text-align: center;
+}
 
-    .input-valor input {
-      padding: 8px;
-      font-size: 16px;
-      width: 120px;
-      text-align: center;
-      border: 2px solid #007BFF;
-      border-radius: 8px;
-    }
+.input-valor input {
+    padding: 8px;
+    font-size: 16px;
+    width: 40%;
+    max-width: 100px;
+    text-align: center;
+    background-color:black;
+    color:white;
+    border: 2px solid #007BFF;
+    border-radius: 8px;
+}
 
-    .btn {
-      background-color: green;
-      color: white;
-      padding: 8px;
-      border: none;
-      border-radius: 8px;
-      cursor: pointer;
-      margin: 2px;
-    }
+.button-container {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 5px;
+    margin-bottom: 0px;
+    
+}
 
-    .btn:hover {
-      background-color: #026b02;
-    }
+.button-container button {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    margin:0px;
+    font-size: 14px;
+    cursor: pointer;
+    border-radius: 8px;
+    border: none;
+    background-color: #007BFF;
+    color: white;
+    transition: background-color 0.3s;
+    min-width: 70px;
+    min-height: 60px;
+}
 
-    .button-container {
-      display: flex;
-      flex-wrap: wrap;
-      justify-content: center;
-      gap: 10px;
-      margin-bottom: 15px;
-    }
+.button-container button span.tipo {
+    font-size: 18px;
+    font-weight: bold;
+}
 
+.button-container button span.valor {
+    font-size: 13px;
+}
+
+.button-container button:hover {
+    background-color: #0056b3;
+}
+
+.btn-whatsapp {
+    background-color: #ffdd00;
+    color:black;
+    font-weight:bold;
+    padding: 10px 20px;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    font-size: 16px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    margin: 15px auto 0;
+}
+
+.btn-whatsapp:hover {
+    background-color: #1ebe5d;
+}
+
+.checkbox-container {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+}
+
+.linha-numeros {
+    display: grid;
+    grid-template-columns: repeat(10, 1fr);
+    gap: 1px;
+}
+
+.number-button {
+    width: 100%;
+    aspect-ratio: 1/1;
+    border: 2px solid #007BFF;
+    border-radius: 8px;
+    background-color: black;
+    color: white;
+    font-weight: bold;
+    font-size: clamp(14px, 3vw, 18px);
+    cursor: pointer;
+    transition: all 0.3s;
+}
+
+.number-button:hover {
+    background-color: #333;
+}
+
+.number-button.selecionado {
+    background-color: green;
+    color: white;
+}
+
+/* Responsivo pequeno */
+
+
+.resultado {
+    margin-top: 10px;
+    font-weight: bold;
+    font-size: 20px;
+    color: green;
+    text-align: center;
+}
+
+.modal {
+    display: none;
+    position: fixed;
+    z-index: 999;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    overflow: hidden;
+    background-color: rgba(0,0,0,0.7);
+}
+
+.modal-content {
+    background-color: white;
+    margin: 20% auto;
+    padding: 20px;
+    border-radius: 10px;
+    width: 80%;
+    max-width: 300px;
+    text-align: center;
+}
+
+.close {
+    color: #aaa;
+    font-size: 28px;
+    font-weight: bold;
+    cursor: pointer;
+}
+
+.btn {
+    padding: 8px 16px;
+    font-size: 14px;
+    cursor: pointer;
+    border-radius: 8px;
+    border: none;
+    background-color: green;
+    color: white;
+    transition: background-color 0.3s;
+}
+
+.btn:hover {
+    background-color: darkgreen;
+}
+
+/* 🌐 Responsivo Extra */
+@media (max-width: 1000px) {
     .button-container button {
-      background-color: black;
-      color: white;
-      border: none;
-      border-radius: 8px;
-      min-width: 70px;
-      min-height: 60px;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      justify-content: center;
-      transition: 0.3s;
+        min-width: 60px;
+        min-height: 55px;
     }
-
-    .button-container button:hover {
-      background-color: green;
-    }
-
-    .button-container button span.tipo {
-      font-size: 18px;
-      font-weight: bold;
-    }
-
-    .button-container button span.valor {
-      font-size: 13px;
-    }
-
-    .checkbox-container {
-      display: grid;
-      grid-template-columns: repeat(10, 1fr);
-      gap: 4px;
-      justify-items: center;
-    }
-
-    .number-button {
-      width: 60px;
-      height: 50px;
-      border: 2px solid #007BFF;
-      border-radius: 8px;
-      background-color: #ff1540;
-      color: white;
-      font-weight: bold;
-      font-size: 20px;
-      cursor: pointer;
-      transition: 0.3s;
-    }
-
-    .number-button:hover {
-      background-color: #000;
-    }
-
-    .number-button.selecionado {
-      background-color: green;
-      color: white;
-    }
-
-    .resultado {
-      text-align: center;
-      font-weight: bold;
-      font-size: 25px;
-      color: white;
-      margin-top: 10px;
-    }
-
-    .btn-whatsapp {
-      background-color: #25D366;
-      color: white;
-      padding: 10px 20px;
-      border: none;
-      border-radius: 8px;
-      cursor: pointer;
-      font-size: 16px;
-      display: block;
-      margin: 15px auto;
-    }
-
-    .btn-whatsapp:hover {
-      background-color: #1ebe5d;
-    }
-
-    .modal {
-      display: none;
-      position: fixed;
-      z-index: 999;
-      left: 0;
-      top: 0;
-      width: 100%;
-      height: 100%;
-      background-color: rgba(0,0,0,0.7);
-    }
-
-    .modal-content {
-      background-color: white;
-      margin: 20% auto;
-      padding: 20px;
-      border-radius: 10px;
-      width: 80%;
-      max-width: 300px;
-      text-align: center;
-    }
-
-    .close {
-      color: #aaa;
-      float: right;
-      font-size: 28px;
-      font-weight: bold;
-      cursor: pointer;
-    }
+}
   </style>
 </head>
 <body>
@@ -232,28 +261,36 @@ gruposValidos.forEach(tipo => {
 
 // Cria botões numéricos
 const container = document.getElementById('checkboxContainer');
-for (let i = 1; i <= 80; i++) {
-  const numero = i.toString().padStart(2, '0');
-  const btn = document.createElement('button');
-  btn.className = 'number-button';
-  btn.id = 'num' + numero;
-  btn.textContent = numero;
 
-  btn.addEventListener('click', () => {
-    const selecionados = document.querySelectorAll('.number-button.selecionado');
-    if (btn.classList.contains('selecionado')) {
-      btn.classList.remove('selecionado');
-    } else {
-      if (selecionados.length >= 45) {
-        alert("⚠️ Você só pode marcar no máximo 45 números.");
-        return;
-      }
-      btn.classList.add('selecionado');
+for (let i = 1; i <= 80; i += 10) {
+    const linha = document.createElement('div');
+    linha.className = 'linha-numeros';
+
+    for (let j = i; j < i + 10; j++) {
+        const numero = j.toString().padStart(2, '0');
+        const btn = document.createElement('button');
+        btn.className = 'number-button';
+        btn.id = 'num' + numero;
+        btn.textContent = numero;
+
+        btn.addEventListener('click', () => {
+            const selecionados = document.querySelectorAll('.number-button.selecionado');
+            if (btn.classList.contains('selecionado')) {
+                btn.classList.remove('selecionado');
+            } else {
+                if (selecionados.length >= 85) {
+                    alert("⚠️ Você só pode marcar no máximo 85 números.");
+                    return;
+                }
+                btn.classList.add('selecionado');
+            }
+            atualizarContador();
+        });
+
+        linha.appendChild(btn);
     }
-    atualizarContador();
-  });
 
-  container.appendChild(btn);
+    container.appendChild(linha);
 }
 
 // Atualiza contador
@@ -368,8 +405,8 @@ function enviarWhatsapp() {
   const dataHora = agora.toLocaleString('pt-BR');
   const numeroControle = gerarNumeroControle();
 
-  const mensagem = `📝 *Aposta QUININHA*
-🔢 *Extração 20:00:* ${selecionados.join(' - ')}
+  const mensagem = `         📝 *APOSTA QUININHA*
+🔢 *Extração 20:00\n* ${selecionados.join(' - ')}\n
 💰 *Valor A PAGAR:* R$ ${valorDigitado.toFixed(2).replace('.', ',')}
 🎯 *Quantidade:* ${tipoSelecionado}
 💵 *Total a Receber:* ${total}
@@ -387,9 +424,10 @@ function enviarWhatsapp() {
 }
 
 // Redirecionamentos
-  function lotinha() { window.location.href = "https://supermania.netlify.app/lotinha"; }
+function lotinha() { window.location.href = "https://supermania.netlify.app/lotinha"; }
 function seninha() { window.location.href = "https://supermania.netlify.app/seninha"; }
 function supermania() { window.location.href = "https://supermania.netlify.app/"; }
 </script>
+
 </body>
 </html>
