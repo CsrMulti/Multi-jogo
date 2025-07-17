@@ -1,0 +1,168 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <title>Consultar Aposta</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <style>
+    body {
+      background-color: #000;
+      color: white;
+      font-family: Arial, sans-serif;
+      text-align: center;
+      padding: 20px;
+    }
+
+    input, button {
+      padding: 10px;
+      font-size: 16px;
+      border-radius: 8px;
+      border: none;
+      margin: 10px;
+    }
+
+    input {
+      width: 200px;
+    }
+
+    button {
+      background-color: #00c853;
+      color: white;
+      cursor: pointer;
+    }
+
+    button:hover {
+      background-color: #009624;
+    }
+
+    .resultado {
+      margin-top: 20px;
+      padding: 15px;
+      background-color: #1e1e1e;
+      border-radius: 10px;
+      border: 1px solid #00c853;
+    }
+
+    .status {
+      margin-top: 10px;
+    }
+
+    .status button {
+      background-color: #fdd835;
+      color: #000;
+      margin: 5px;
+    }
+
+    .status button:hover {
+      background-color: #fbc02d;
+    }
+
+    .compartilhar {
+      margin-top: 15px;
+    }
+
+    .compartilhar button {
+      background-color: #4fc3f7;
+      color: #000;
+      margin: 5px;
+    }
+
+    .compartilhar button:hover {
+      background-color: #03a9f4;
+    }
+  </style>
+
+  <!-- Firebase SDK -->
+  <script src="https://www.gstatic.com/firebasejs/11.9.1/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/11.9.1/firebase-database-compat.js"></script>
+  <script>
+    const firebaseConfig = {
+      databaseURL: "https://loteriasmj-274f9-default-rtdb.firebaseio.com/"
+    };
+    firebase.initializeApp(firebaseConfig);
+    const db = firebase.database();
+  </script>
+</head>
+<body>
+
+  <h2>🔍 Consultar Aposta</h2>
+
+  <input type="text" id="codigoAposta" placeholder="Digite o código" />
+  <button onclick="buscarAposta()">Buscar</button>
+
+  <div id="detalhes" class="resultado" style="display:none;"></div>
+
+  <script>
+    function buscarAposta() {
+      const codigo = document.getElementById("codigoAposta").value.trim();
+      if (codigo === "") {
+        alert("Digite o código da aposta!");
+        return;
+      }
+
+      const ref = db.ref("apostas/" + codigo);
+      ref.once("value")
+        .then(snapshot => {
+          const data = snapshot.val();
+          if (!data) {
+            alert("❌ Aposta não encontrada!");
+            return;
+          }
+
+          const linkViewer = `${window.location.origin}/viewer.html?codigo=${codigo}`;
+
+          let html = `
+            <p><strong>🔢 Números:</strong> ${data.numeros.join(" - ")}</p>
+            <p><strong>🎯 Quantidade:</strong> ${data.quantidade}</p>
+            <p><strong>💰 Valor Apostado:</strong> R$ ${data.valorDigitado}</p>
+            <p><strong>🏆 Total a Receber:</strong> R$ ${data.totalReceber}</p>
+            <p><strong>📅 Data:</strong> ${data.dataHora}</p>
+            <p><strong>🔢 Controle:</strong> ${data.numeroControle}</p>
+            <p><strong>📥 Resultado:</strong> <a href="${data.resultadoLink}" target="_blank" style="color: #4fc3f7;">Abrir</a></p>
+
+            <div class="status">
+              <p><strong>Status:</strong> ${data.status || "⏳ Aguardando..."}</p>
+              <button onclick="atualizarStatus('${codigo}', 'Ganhou')">✅ Marcar como Ganhou</button>
+              <button onclick="atualizarStatus('${codigo}', 'Perdeu')">❌ Marcar como Perdeu</button>
+            </div>
+
+            <div class="compartilhar">
+              <button onclick="compartilharWhatsapp('${codigo}')">📲 Compartilhar no WhatsApp</button>
+              <button onclick="copiarLink('${linkViewer}')">🔗 Copiar Link do Viewer</button>
+            </div>
+          `;
+
+          document.getElementById("detalhes").innerHTML = html;
+          document.getElementById("detalhes").style.display = "block";
+        })
+        .catch(error => {
+          alert("Erro ao buscar: " + error);
+        });
+    }
+
+    function atualizarStatus(codigo, status) {
+      db.ref("apostas/" + codigo + "/status").set(status)
+        .then(() => {
+          alert("✅ Status atualizado para: " + status);
+          buscarAposta(); // Recarrega
+        })
+        .catch(error => {
+          alert("Erro ao atualizar status: " + error);
+        });
+    }
+
+    function compartilharWhatsapp(codigo) {
+      const link = `${window.location.origin}/viewer.html?codigo=${codigo}`;
+      const mensagem = `📝 Veja minha aposta!\n🔢 Código: ${codigo}\n🔗 ${link}`;
+      window.open(`https://wa.me/?text=${encodeURIComponent(mensagem)}`, "_blank");
+    }
+
+    function copiarLink(link) {
+      navigator.clipboard.writeText(link)
+        .then(() => alert("🔗 Link copiado com sucesso!"))
+        .catch(() => alert("Erro ao copiar o link."));
+    }
+  </script>
+
+</body>
+</html>
