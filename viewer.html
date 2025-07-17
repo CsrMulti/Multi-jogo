@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Visualizar Aposta</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background: #1f1c2c;
+      color: #fff;
+      padding: 20px;
+    }
+
+    .card {
+      background-color: #2e2a42;
+      border-radius: 10px;
+      padding: 20px;
+      max-width: 500px;
+      margin: auto;
+      box-shadow: 0 0 10px rgba(0,0,0,0.5);
+    }
+
+    .card h2 {
+      margin-bottom: 10px;
+      text-align: center;
+    }
+
+    .card p {
+      margin: 5px 0;
+      font-size: 16px;
+    }
+
+    .status {
+      font-size: 18px;
+      font-weight: bold;
+      padding: 8px;
+      border-radius: 8px;
+      text-align: center;
+      margin-bottom: 15px;
+    }
+
+    .status.aguardando {
+      background-color: #f1c40f;
+      color: #000;
+    }
+
+    .status.ganhou {
+      background-color: #2ecc71;
+      color: #000;
+    }
+
+    .status.perdeu {
+      background-color: #e74c3c;
+      color: #fff;
+    }
+  </style>
+</head>
+<body>
+  <div class="card">
+    <div id="status" class="status aguardando">Carregando status...</div>
+    <h2>Detalhes da Aposta</h2>
+    <p><strong>Jogador:</strong> <span id="jogador">-</span></p>
+    <p><strong>Data:</strong> <span id="data">-</span></p>
+    <p><strong>Código:</strong> <span id="codigo">-</span></p>
+    <p><strong>Qtd. Dezenas:</strong> <span id="quantidade">-</span></p>
+    <p><strong>Dezenas:</strong> <span id="dezenas">-</span></p>
+    <p><strong>Valor Pago:</strong> <span id="valor">-</span></p>
+    <p><strong>Valor a Receber:</strong> <span id="receber">-</span></p>
+  </div>
+
+  <script type="module">
+    // Conexão Firebase
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/11.9.1/firebase-app.js";
+    import { getDatabase, ref, get } from "https://www.gstatic.com/firebasejs/11.9.1/firebase-database.js";
+
+    const firebaseConfig = {
+      databaseURL: "https://jogo-60a9e-default-rtdb.firebaseio.com/"
+    };
+
+    const app = initializeApp(firebaseConfig);
+    const database = getDatabase(app);
+
+    // Pega o código da URL (?codigo=XXXX)
+    const urlParams = new URLSearchParams(window.location.search);
+    const codigo = urlParams.get('codigo');
+
+    if (!codigo) {
+      alert("Código não fornecido na URL.");
+    } else {
+      carregarAposta(codigo);
+    }
+
+    async function carregarAposta(codigo) {
+      try {
+        const apostaRef = ref(database, `apostas/${codigo}`);
+        const snapshot = await get(apostaRef);
+
+        if (snapshot.exists()) {
+          const aposta = snapshot.val();
+
+          document.getElementById('jogador').textContent = aposta.nome || '-';
+          document.getElementById('data').textContent = aposta.data || '-';
+          document.getElementById('codigo').textContent = codigo;
+          document.getElementById('quantidade').textContent = aposta.qtd || '-';
+          document.getElementById('dezenas').textContent = aposta.dezenas || '-';
+          document.getElementById('valor').textContent = aposta.valor || '-';
+          document.getElementById('receber').textContent = aposta.receber || '-';
+
+          // Status: aguardando / ganhou / perdeu
+          const statusEl = document.getElementById('status');
+          const status = aposta.status || 'aguardando';
+          statusEl.textContent = status.charAt(0).toUpperCase() + status.slice(1);
+
+          statusEl.classList.remove('aguardando', 'ganhou', 'perdeu');
+          statusEl.classList.add(status);
+        } else {
+          alert("Aposta não encontrada.");
+        }
+      } catch (error) {
+        console.error("Erro ao buscar aposta:", error);
+        alert("Erro ao carregar a aposta.");
+      }
+    }
+  </script>
+</body>
+</html>
