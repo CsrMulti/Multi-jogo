@@ -59,6 +59,7 @@
   </div>
 
   <script>
+      
     const urlParams = new URLSearchParams(window.location.search);
     const jogo = urlParams.get("jogo");
     const codigo = urlParams.get("codigo");
@@ -76,9 +77,17 @@
               <p><strong>🎯 Quantidade:</strong> ${data.quantidade}</p>
               <p><strong>💰 Valor Apostado:</strong> R$ ${data.valorDigitado}</p>
               <p><strong>🏆 Total a Receber:</strong> R$ ${data.totalReceber}</p>
+              
               <p><strong>📅 Data:</strong> ${data.dataHora}</p>
               <p><strong>🔢 Controle:</strong> ${data.numeroControle}</p>
-              <p><strong>📥 Resultado:</strong> <a href="${data.resultadoLink}" target="_blank">Ver Resultado</a></p>
+              
+              
+          <p><strong>📥 Resultado:</strong> <a href="https://divertidu.com/lotinha" target="_blank">Ver Resultado</a></p>       
+              
+              
+              
+              
+              <p style="display:none"><strong>📥 Resultado:</strong> <a style="display:none" href="${data.resultadoLink}" target="_blank">Ver Resultado</a></p>
               <p class="status">📌 Status: ${data.status || "⏳ Aguardando..."}</p>
             `;
             document.getElementById("conteudo").innerHTML = html;
@@ -91,6 +100,7 @@
           document.getElementById("conteudo").innerHTML = "<p>⚠️ Erro ao carregar dados!</p>";
         });
     }
+    
   </script>
 
 </body>
