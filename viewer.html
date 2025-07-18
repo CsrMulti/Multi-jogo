@@ -45,12 +45,12 @@
       color: #000;
     }
 
-    .status.Ganhou {
+    .status.ganhou {
       background-color: #2ecc71;
       color: #000;
     }
 
-    .status.Perdeu {
+    .status.perdeu {
       background-color: #e74c3c;
       color: #fff;
     }
@@ -60,7 +60,7 @@
   <div class="card">
     <div id="status" class="status aguardando">Carregando status...</div>
     <h2>Detalhes da Aposta</h2>
-    <p><strong>Jogo:</strong> <span id="jogo">-</span></p>
+    <p><strong>Jogador:</strong> <span id="jogador">-</span></p>
     <p><strong>Data:</strong> <span id="data">-</span></p>
     <p><strong>Código:</strong> <span id="codigo">-</span></p>
     <p><strong>Qtd. Dezenas:</strong> <span id="quantidade">-</span></p>
@@ -80,12 +80,13 @@
     const app = initializeApp(firebaseConfig);
     const database = getDatabase(app);
 
+    // Pega ?jogo=LOTINHA&codigo=XYZ
     const urlParams = new URLSearchParams(window.location.search);
-    const jogo = urlParams.get('jogo'); // <-- novo
+    const jogo = urlParams.get('jogo');
     const codigo = urlParams.get('codigo');
 
     if (!jogo || !codigo) {
-      alert("Parâmetros ausentes na URL. Ex: ?jogo=LOTINHA&codigo=123456");
+      alert("Parâmetros ausentes. Exemplo: viewer.html?jogo=LOTINHA&codigo=XYZ123");
     } else {
       carregarAposta(jogo, codigo);
     }
@@ -98,22 +99,21 @@
         if (snapshot.exists()) {
           const aposta = snapshot.val();
 
-          document.getElementById('jogo').textContent = jogo;
-          document.getElementById('data').textContent = aposta.dataHora || '-';
-          document.getElementById('codigo').textContent = codigo;
-          document.getElementById('quantidade').textContent = aposta.quantidade || '-';
-          document.getElementById('dezenas').textContent = aposta.numeros?.join(" - ") || '-';
-          document.getElementById('valor').textContent = `R$ ${aposta.valorDigitado || '0,00'}`;
-          document.getElementById('receber').textContent = `R$ ${aposta.totalReceber || '0,00'}`;
+          document.getElementById('jogador').textContent = aposta.nome || '-';
+          document.getElementById('data').textContent = aposta.dataHora || aposta.data || '-';
+          document.getElementById('codigo').textContent = aposta.codigo || codigo;
+          document.getElementById('quantidade').textContent = aposta.numeros?.length || aposta.qtd || '-';
+          document.getElementById('dezenas').textContent = Array.isArray(aposta.numeros) ? aposta.numeros.join(', ') : (aposta.dezenas || '-');
+          document.getElementById('valor').textContent = aposta.valorDigitado || aposta.valor || '-';
+          document.getElementById('receber').textContent = aposta.totalReceber || aposta.receber || '-';
 
           const statusEl = document.getElementById('status');
           const status = aposta.status || 'aguardando';
-
           statusEl.textContent = status.charAt(0).toUpperCase() + status.slice(1);
-          statusEl.classList.remove('aguardando', 'Ganhou', 'Perdeu');
+          statusEl.classList.remove('aguardando', 'ganhou', 'perdeu');
           statusEl.classList.add(status);
         } else {
-          alert("❌ Aposta não encontrada.");
+          alert("Aposta não encontrada.");
         }
       } catch (error) {
         console.error("Erro ao buscar aposta:", error);
