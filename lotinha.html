@@ -362,6 +362,22 @@ function gerarNumeroControle() {
   return Math.floor(100000 + Math.random() * 900000);
 }
 
+
+let nomeJogoSelecionado = "LOTINHA"; // Valor inicial padrão
+
+function supermania() {
+  nomeJogoSelecionado = "SUPER MANIA";
+  document.querySelector('h2').textContent = nomeJogoSelecionado;
+}
+function seninha() {
+  nomeJogoSelecionado = "SENINHA";
+  document.querySelector('h2').textContent = nomeJogoSelecionado;
+}
+function quininha() {
+  nomeJogoSelecionado = "QUININHA";
+  document.querySelector('h2').textContent = nomeJogoSelecionado;
+}
+
 function enviarWhatsapp() {
   if (!diaPermitido()) {
     alert("⚠️ Apostas permitidas apenas Segunda, Quarta e Sexta.");
@@ -397,6 +413,7 @@ function enviarWhatsapp() {
   const numeroControle = gerarNumeroControle();
 
   const dadosAposta = {
+    nomeJogo: nomeJogoSelecionado,
     numeros: selecionados,
     quantidade: selecionados.length,
     valorDigitado: valorDigitado.toFixed(2),
@@ -407,11 +424,11 @@ function enviarWhatsapp() {
     tipoSelecionado
   };
 
-  firebase.database().ref('apostas/' + numeroControle).set(dadosAposta)
+  firebase.database().ref(`apostas/${nomeJogoSelecionado}/${numeroControle}`).set(dadosAposta)
     .then(() => console.log("✅ Aposta salva com sucesso."))
     .catch((error) => console.error("❌ Erro ao salvar aposta:", error));
 
-  const mensagem = `📝 *Aposta registrada com sucesso!*\n🔢 *Código da Aposta:* ${numeroControle}`;
+  const mensagem = `📝 *${nomeJogoSelecionado}*\n🔢 *Código da Aposta:* ${numeroControle}`;
 
   abrirModal();
 
@@ -421,6 +438,7 @@ function enviarWhatsapp() {
     fecharModal();
   }, 2000);
 }
+
 
 function supermania() {
   window.location.href = "https://supermania.netlify.app/supermania";
