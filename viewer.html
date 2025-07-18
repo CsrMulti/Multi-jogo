@@ -1,125 +1,97 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta charset="UTF-8">
   <title>Visualizar Aposta</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <style>
     body {
+      background-color: #000;
+      color: white;
       font-family: Arial, sans-serif;
-      background: #1f1c2c;
-      color: #fff;
       padding: 20px;
-    }
-
-    .card {
-      background-color: #2e2a42;
-      border-radius: 10px;
-      padding: 20px;
-      max-width: 500px;
-      margin: auto;
-      box-shadow: 0 0 10px rgba(0,0,0,0.5);
-    }
-
-    .card h2 {
-      margin-bottom: 10px;
       text-align: center;
     }
 
-    .card p {
-      margin: 5px 0;
-      font-size: 16px;
+    .container {
+      background-color: #1e1e1e;
+      padding: 20px;
+      border-radius: 10px;
+      border: 2px solid #00c853;
+      max-width: 500px;
+      margin: 0 auto;
+    }
+
+    h2 {
+      color: #00e676;
+    }
+
+    p {
+      margin: 10px 0;
+    }
+
+    a {
+      color: #4fc3f7;
+      text-decoration: none;
     }
 
     .status {
-      font-size: 18px;
       font-weight: bold;
-      padding: 8px;
-      border-radius: 8px;
-      text-align: center;
-      margin-bottom: 15px;
-    }
-
-    .status.aguardando {
-      background-color: #f1c40f;
-      color: #000;
-    }
-
-    .status.ganhou {
-      background-color: #2ecc71;
-      color: #000;
-    }
-
-    .status.perdeu {
-      background-color: #e74c3c;
-      color: #fff;
+      margin-top: 15px;
     }
   </style>
+
+  <!-- Firebase SDK -->
+  <script src="https://www.gstatic.com/firebasejs/11.9.1/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/11.9.1/firebase-database-compat.js"></script>
+  <script>
+    const firebaseConfig = {
+      databaseURL: "https://loteriasmj-274f9-default-rtdb.firebaseio.com/"
+    };
+    firebase.initializeApp(firebaseConfig);
+    const db = firebase.database();
+  </script>
 </head>
 <body>
-  <div class="card">
-    <div id="status" class="status aguardando">Carregando status...</div>
-    <h2>Detalhes da Aposta</h2>
-    <p><strong>Jogador:</strong> <span id="jogador">-</span></p>
-    <p><strong>Data:</strong> <span id="data">-</span></p>
-    <p><strong>Código:</strong> <span id="codigo">-</span></p>
-    <p><strong>Qtd. Dezenas:</strong> <span id="quantidade">-</span></p>
-    <p><strong>Dezenas:</strong> <span id="dezenas">-</span></p>
-    <p><strong>Valor Pago:</strong> <span id="valor">-</span></p>
-    <p><strong>Valor a Receber:</strong> <span id="receber">-</span></p>
+
+  <div class="container" id="conteudo">
+    <h2>🔎 Carregando Aposta...</h2>
   </div>
 
-  <script type="module">
-    import { initializeApp } from "https://www.gstatic.com/firebasejs/11.9.1/firebase-app.js";
-    import { getDatabase, ref, get } from "https://www.gstatic.com/firebasejs/11.9.1/firebase-database.js";
-
-    const firebaseConfig = {
-      databaseURL: "https://jogo-60a9e-default-rtdb.firebaseio.com/"
-    };
-
-    const app = initializeApp(firebaseConfig);
-    const database = getDatabase(app);
-
-    // Pega ?jogo=LOTINHA&codigo=XYZ
+  <script>
     const urlParams = new URLSearchParams(window.location.search);
-    const jogo = urlParams.get('jogo');
-    const codigo = urlParams.get('codigo');
+    const jogo = urlParams.get("jogo");
+    const codigo = urlParams.get("codigo");
 
     if (!jogo || !codigo) {
-      alert("Parâmetros ausentes. Exemplo: viewer.html?jogo=LOTINHA&codigo=XYZ123");
+      document.getElementById("conteudo").innerHTML = "<p>❌ Código ou jogo inválido!</p>";
     } else {
-      carregarAposta(jogo, codigo);
-    }
-
-    async function carregarAposta(jogo, codigo) {
-      try {
-        const apostaRef = ref(database, `apostas/${jogo}/${codigo}`);
-        const snapshot = await get(apostaRef);
-
-        if (snapshot.exists()) {
-          const aposta = snapshot.val();
-
-          document.getElementById('jogador').textContent = aposta.nome || '-';
-          document.getElementById('data').textContent = aposta.dataHora || aposta.data || '-';
-          document.getElementById('codigo').textContent = aposta.codigo || codigo;
-          document.getElementById('quantidade').textContent = aposta.numeros?.length || aposta.qtd || '-';
-          document.getElementById('dezenas').textContent = Array.isArray(aposta.numeros) ? aposta.numeros.join(', ') : (aposta.dezenas || '-');
-          document.getElementById('valor').textContent = aposta.valorDigitado || aposta.valor || '-';
-          document.getElementById('receber').textContent = aposta.totalReceber || aposta.receber || '-';
-
-          const statusEl = document.getElementById('status');
-          const status = aposta.status || 'aguardando';
-          statusEl.textContent = status.charAt(0).toUpperCase() + status.slice(1);
-          statusEl.classList.remove('aguardando', 'ganhou', 'perdeu');
-          statusEl.classList.add(status);
-        } else {
-          alert("Aposta não encontrada.");
-        }
-      } catch (error) {
-        console.error("Erro ao buscar aposta:", error);
-        alert("Erro ao carregar a aposta.");
-      }
+      db.ref(`apostas/${jogo}/${codigo}`).once("value")
+        .then(snapshot => {
+          const data = snapshot.val();
+          if (data) {
+            const html = `
+              <h2>${data.nomeJogo}</h2>
+              <p><strong>🔢 Números:</strong><br> ${data.numeros.join(" - ")}</p>
+              <p><strong>🎯 Quantidade:</strong> ${data.quantidade}</p>
+              <p><strong>💰 Valor Apostado:</strong> R$ ${data.valorDigitado}</p>
+              <p><strong>🏆 Total a Receber:</strong> R$ ${data.totalReceber}</p>
+              <p><strong>📅 Data:</strong> ${data.dataHora}</p>
+              <p><strong>🔢 Controle:</strong> ${data.numeroControle}</p>
+              <p><strong>📥 Resultado:</strong> <a href="${data.resultadoLink}" target="_blank">Ver Resultado</a></p>
+              <p class="status">📌 Status: ${data.status || "⏳ Aguardando..."}</p>
+            `;
+            document.getElementById("conteudo").innerHTML = html;
+          } else {
+            document.getElementById("conteudo").innerHTML = "<p>❌ Aposta não encontrada!</p>";
+          }
+        })
+        .catch(error => {
+          console.error(error);
+          document.getElementById("conteudo").innerHTML = "<p>⚠️ Erro ao carregar dados!</p>";
+        });
     }
   </script>
+
 </body>
 </html>
