@@ -93,25 +93,27 @@
   <div id="detalhes" class="resultado" style="display:none;"></div>
 
   <script>
-    function buscarAposta() {
-      const codigo = document.getElementById("codigoAposta").value.trim();
-      if (codigo === "") {
-        alert("Digite o código da aposta!");
-        return;
-      }
+    const jogos = ["LOTINHA", "SUPER MANIA", "SENINHA", "QUININHA"];
 
-      const ref = db.ref("apostas/" + codigo);
-      ref.once("value")
-        .then(snapshot => {
-          const data = snapshot.val();
-          if (!data) {
-            alert("❌ Aposta não encontrada!");
-            return;
-          }
+function buscarAposta() {
+  const codigo = document.getElementById("codigoAposta").value.trim();
+  if (codigo === "") {
+    alert("Digite o código da aposta!");
+    return;
+  }
 
-          const linkViewer = `${window.location.origin}/viewer.html?codigo=${codigo}`;
+  let encontrada = false;
 
+  jogos.forEach(jogo => {
+    db.ref(`apostas/${jogo}/${codigo}`).once("value")
+      .then(snapshot => {
+        const data = snapshot.val();
+        if (data && !encontrada) {
+          encontrada = true;
+
+          const linkViewer = `${window.location.origin}/viewer.html?jogo=${jogo}&codigo=${codigo}`;
           let html = `
+            <p><strong>🎮 Jogo:</strong> ${jogo}</p>
             <p><strong>🔢 Números:</strong> ${data.numeros.join(" - ")}</p>
             <p><strong>🎯 Quantidade:</strong> ${data.quantidade}</p>
             <p><strong>💰 Valor Apostado:</strong> R$ ${data.valorDigitado}</p>
@@ -122,41 +124,47 @@
 
             <div class="status">
               <p><strong>Status:</strong> ${data.status || "⏳ Aguardando..."}</p>
-              <button onclick="atualizarStatus('${codigo}', 'Ganhou')">✅ Marcar como Ganhou</button>
-              <button onclick="atualizarStatus('${codigo}', 'Perdeu')">❌ Marcar como Perdeu</button>
+              <button onclick="atualizarStatus('${jogo}', '${codigo}', 'Ganhou')">✅ Marcar como Ganhou</button>
+              <button onclick="atualizarStatus('${jogo}', '${codigo}', 'Perdeu')">❌ Marcar como Perdeu</button>
             </div>
 
             <div class="compartilhar">
-              <button onclick="compartilharWhatsapp('${codigo}')">📲 Compartilhar no WhatsApp</button>
+              <button onclick="compartilharWhatsapp('${jogo}', '${codigo}')">📲 Compartilhar no WhatsApp</button>
               <button onclick="copiarLink('${linkViewer}')">🔗 Copiar Link do Viewer</button>
             </div>
           `;
 
           document.getElementById("detalhes").innerHTML = html;
           document.getElementById("detalhes").style.display = "block";
-        })
-        .catch(error => {
-          alert("Erro ao buscar: " + error);
-        });
-    }
+        }
+      })
+      .catch(error => {
+        console.error("Erro ao buscar:", error);
+      });
+  });
 
-    function atualizarStatus(codigo, status) {
-      db.ref("apostas/" + codigo + "/status").set(status)
-        .then(() => {
-          alert("✅ Status atualizado para: " + status);
-          buscarAposta(); // Recarrega
-        })
-        .catch(error => {
-          alert("Erro ao atualizar status: " + error);
-        });
+  setTimeout(() => {
+    if (!encontrada) {
+      alert("❌ Aposta não encontrada em nenhum jogo!");
     }
+  }, 1000);
+}
+    function atualizarStatus(jogo, codigo, status) {
+  db.ref(`apostas/${jogo}/${codigo}/status`).set(status)
+    .then(() => {
+      alert("✅ Status atualizado para: " + status);
+      buscarAposta(); // Recarrega
+    })
+    .catch(error => {
+      alert("Erro ao atualizar status: " + error);
+    });
+}
 
-    function compartilharWhatsapp(codigo) {
-      const link = `${window.location.origin}/viewer.html?codigo=${codigo}`;
-      const mensagem = `📝 Veja minha aposta!\n🔢 Código: ${codigo}\n🔗 ${link}`;
-      window.open(`https://wa.me/?text=${encodeURIComponent(mensagem)}`, "_blank");
-    }
-
+function compartilharWhatsapp(jogo, codigo) {
+  const link = `${window.location.origin}/viewer.html?jogo=${jogo}&codigo=${codigo}`;
+  const mensagem = `📝 Veja minha aposta em *${jogo}*!\n🔢 Código: ${codigo}\n🔗 ${link}`;
+  window.open(`https://wa.me/?text=${encodeURIComponent(mensagem)}`, "_blank");
+}
     function copiarLink(link) {
       navigator.clipboard.writeText(link)
         .then(() => alert("🔗 Link copiado com sucesso!"))
